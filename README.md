@@ -101,13 +101,11 @@ For detailed results and analysis, please refer to the individual experiment out
 
 Potential areas for future investigation include:
 
-1. Extending the experiments to different network architectures and datasets.
-2. Analyzing the impact of other hyperparameters on training variability.
-3. Developing methods to reduce variability without compromising model performance.
-
-
-
-
+1. Extending the experiments to diverse architectures (e.g., transformers, GANs) and modalities (e.g., vision, language, audio).
+2. Investigating variability specifically in early stages of training versus late stages, to understand critical periods of model development.
+3. Analyzing gradient flows throughout the training process to identify patterns or anomalies that contribute to variability.
+4. Exploring the relationship between model complexity and training variability across different stages of learning.
+5. Developing techniques to stabilize training trajectories without sacrificing model performance or generalization ability.
 
 
 
