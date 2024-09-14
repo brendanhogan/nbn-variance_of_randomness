@@ -9,15 +9,15 @@ The aim is to isolate the effect of data order while keeping the network initial
 """
 import os
 import random
+import argparse
 from typing import List, Tuple
 
-import numpy as np
 import torch
+import numpy as np
 import torchvision
 from torch import nn, optim
-from torch.utils.data import DataLoader, Subset
 from torchvision import transforms
-from torchvision.models import resnet18
+from torch.utils.data import DataLoader
 
 import utils
 
@@ -82,7 +82,6 @@ def run_experiment(args: argparse.Namespace) -> None:
 
 
 if __name__ == '__main__':
-    import argparse
     parser = argparse.ArgumentParser(description='Experiment 3: ResNet-18 on CIFAR10 with fixed network initialization')
     parser.add_argument('--run_experiment', action='store_true', help='Run training')
     parser.add_argument('--plot', action='store_true', help='Plot results')
@@ -92,7 +91,8 @@ if __name__ == '__main__':
 
     if args.run_experiment:
         torch.manual_seed(42)
-        initial_model = resnet18(num_classes=10)
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        initial_model = utils.initialize_model(device)
         os.makedirs(args.output_dir, exist_ok=True)
         torch.save(initial_model.state_dict(), os.path.join(args.output_dir, 'initial_model_state.pth'))
         run_experiment(args)
