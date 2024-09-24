@@ -87,7 +87,6 @@ def run_experiment(args: argparse.Namespace) -> None:
         utils.save_experiment_data(args.output_dir, train_loss_curves, train_acc_curves, test_accs, test_losses)
         utils.print_data_sizes(train_loss_curves, train_acc_curves, test_accs, test_losses)
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Experiment 1: ResNet-18 on CIFAR10')
     parser.add_argument('--run_experiment', action='store_true', help='Run training')

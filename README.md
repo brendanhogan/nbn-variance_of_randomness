@@ -2,7 +2,7 @@
 
 This repository contains the code for the experiments discussed in the Neuron by Neuron blog article: "How much variance does randomness (initializations & data shuffling) introduce?"
 
-[Blog Post Link] <!-- TODO: Add the link to the blog post when published -->
+[Blog Post Link](https://neuron-by-neuron.ghost.io/variance_of_randomness/)
 
 ## Overview
 

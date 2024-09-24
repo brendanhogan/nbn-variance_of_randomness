@@ -98,55 +98,88 @@ def plot_results(args):
     test_accs = np.load(f"{args.output_dir}/test_accs.npy")
     test_losses = np.load(f"{args.output_dir}/test_losses.npy")
 
+    # Calculate mean and standard deviation
+    test_acc_mean = np.mean(test_accs)
+    test_acc_std = np.std(test_accs)
+    test_loss_mean = np.mean(test_losses)
+    test_loss_std = np.std(test_losses)
+
     # Set XKCD style for all plots
-    plt.xkcd()
+    with plt.xkcd():
+        # Set Humor Sans font for XKCD style
 
-    # Plot 1: Training Loss Curves
-    fig, ax = plt.subplots(figsize=(12, 6))
-    for i in range(len(train_loss_curves)):
-        ax.plot(range(1, len(train_loss_curves[i])+1), train_loss_curves[i], alpha=0.3)
-    ax.set_title('Training Loss Curves', fontsize=16)
-    ax.set_xlabel('Epoch', fontsize=14)
-    ax.set_ylabel('Loss', fontsize=14)
-    plt.tight_layout()
-    plt.savefig(os.path.join(plots_dir, 'train_loss_curves_xkcd.png'), dpi=300)
-    plt.close()
+        # Plot 1: Training Loss Curves
+        fig, ax = plt.subplots(figsize=(12, 6))
+        for i in range(len(train_loss_curves)):
+            ax.plot(range(1, len(train_loss_curves[i])+1), train_loss_curves[i], alpha=0.3)
+        
+        # Plot mean and std dev
+        mean_loss = np.mean(train_loss_curves, axis=0)
+        std_loss = np.std(train_loss_curves, axis=0)
+        ax.plot(range(1, len(mean_loss)+1), mean_loss, color='red', linewidth=2, label='Mean')
+        ax.fill_between(range(1, len(mean_loss)+1), mean_loss-std_loss, mean_loss+std_loss, color='red', alpha=0.2, label='Std Dev')
+        
+        ax.set_title('Training Loss Curves', fontsize=16)
+        ax.set_xlabel('Epoch', fontsize=14)
+        ax.set_ylabel('Loss', fontsize=14)
+        ax.legend()
+        plt.tight_layout()
+        plt.savefig(os.path.join(plots_dir, 'train_loss_curves_xkcd.png'), dpi=300)
+        plt.close()
 
-    # Plot 2: Training Accuracy Curves
-    fig, ax = plt.subplots(figsize=(12, 6))
-    for i in range(len(train_acc_curves)):
-        ax.plot(range(1, len(train_acc_curves[i])+1), train_acc_curves[i], alpha=0.3)
-    ax.set_title('Training Accuracy Curves', fontsize=16)
-    ax.set_xlabel('Epoch', fontsize=14)
-    ax.set_ylabel('Accuracy (%)', fontsize=14)
-    plt.tight_layout()
-    plt.savefig(os.path.join(plots_dir, 'train_acc_curves_xkcd.png'), dpi=300)
-    plt.close()
+        # Plot 2: Training Accuracy Curves
+        fig, ax = plt.subplots(figsize=(12, 6))
+        for i in range(len(train_acc_curves)):
+            ax.plot(range(1, len(train_acc_curves[i])+1), train_acc_curves[i], alpha=0.3)
+        
+        # Plot mean and std dev
+        mean_acc = np.mean(train_acc_curves, axis=0)
+        std_acc = np.std(train_acc_curves, axis=0)
+        ax.plot(range(1, len(mean_acc)+1), mean_acc, color='red', linewidth=2, label='Mean')
+        ax.fill_between(range(1, len(mean_acc)+1), mean_acc-std_acc, mean_acc+std_acc, color='red', alpha=0.2, label='Std Dev')
+        
+        ax.set_title('Training Accuracy Curves', fontsize=16)
+        ax.set_xlabel('Epoch', fontsize=14)
+        ax.set_ylabel('Accuracy (%)', fontsize=14)
+        ax.legend()
+        plt.tight_layout()
+        plt.savefig(os.path.join(plots_dir, 'train_acc_curves_xkcd.png'), dpi=300)
+        plt.close()
 
-    # Plot 3: Test Accuracy Histogram
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.histplot(test_accs, kde=True, color='skyblue', ax=ax)
-    ax.set_title('Test Accuracy Distribution', fontsize=16)
-    ax.set_xlabel('Accuracy (%)', fontsize=14)
-    ax.set_ylabel('Frequency', fontsize=14)
-    plt.tight_layout()
-    plt.savefig(os.path.join(plots_dir, 'test_acc_histogram_xkcd.png'), dpi=300)
-    plt.close()
+        # Plot 3: Test Accuracy Histogram
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.histplot(test_accs, kde=True, color='skyblue', ax=ax)
+        ax.axvline(test_acc_mean, color='red', linestyle='dashed', linewidth=2, label='Mean')
+        ax.axvline(test_acc_mean - test_acc_std, color='blue', linestyle='dashed', linewidth=2, label='-1 Std Dev')
+        ax.axvline(test_acc_mean + test_acc_std, color='green', linestyle='dashed', linewidth=2, label='+1 Std Dev')
+        ax.set_title(f'Test Accuracy Distribution\nMean: {test_acc_mean:.2f}%, Std: {test_acc_std:.2f}%', fontsize=16)
+        ax.set_xlabel('Accuracy (%)', fontsize=14)
+        ax.set_ylabel('Frequency', fontsize=14)
+        ax.legend()
+        plt.tight_layout()
+        plt.savefig(os.path.join(plots_dir, 'test_acc_histogram_xkcd.png'), dpi=300)
+        plt.close()
 
-    # Plot 4: Test Loss Histogram
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.histplot(test_losses, kde=True, color='salmon', ax=ax)
-    ax.set_title('Test Loss Distribution', fontsize=16)
-    ax.set_xlabel('Loss', fontsize=14)
-    ax.set_ylabel('Frequency', fontsize=14)
-    plt.tight_layout()
-    plt.savefig(os.path.join(plots_dir, 'test_loss_histogram_xkcd.png'), dpi=300)
-    plt.close()
+        # Plot 4: Test Loss Histogram
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.histplot(test_losses, kde=True, color='salmon', ax=ax)
+        ax.axvline(test_loss_mean, color='red', linestyle='dashed', linewidth=2, label='Mean')
+        ax.axvline(test_loss_mean - test_loss_std, color='blue', linestyle='dashed', linewidth=2, label='-1 Std Dev')
+        ax.axvline(test_loss_mean + test_loss_std, color='green', linestyle='dashed', linewidth=2, label='+1 Std Dev')
+        ax.set_title(f'Test Loss Distribution\nMean: {test_loss_mean:.4f}, Std: {test_loss_std:.4f}', fontsize=16)
+        ax.set_xlabel('Loss', fontsize=14)
+        ax.set_ylabel('Frequency', fontsize=14)
+        ax.legend()
+        plt.tight_layout()
+        plt.savefig(os.path.join(plots_dir, 'test_loss_histogram_xkcd.png'), dpi=300)
+        plt.close()
 
-    print(f"XKCD-style plots saved in {plots_dir}.")
+        print(f"XKCD-style plots saved in {plots_dir}.")
+        print(f"Test Accuracy - Mean: {test_acc_mean:.2f}%, Std: {test_acc_std:.2f}%")
+        print(f"Test Loss - Mean: {test_loss_mean:.4f}, Std: {test_loss_std:.4f}")
 
     # Reset to default style
-    plt.rcdefaults()
+    # plt.rcdefaults()
 
 def load_existing_data(output_dir: str) -> Tuple[List, List, List, List]:
     """
